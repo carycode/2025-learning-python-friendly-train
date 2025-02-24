@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 morse.py
@@ -23,6 +24,20 @@ FUTURE:
 FUTURE:
     consider making sounds
     consider listening to sounds
+
+
+
+As recommended by
+https://peps.python.org/pep-0263/
+the first or second line is
+    # -*- coding: utf-8 -*-
+As recommended by
+https://stackoverflow.com/questions/6908143/should-i-put-shebang-in-python-scripts-and-what-form-should-it-take
+the first line is the recommended shebang line
+    #!/usr/bin/env python3
+(this *must* be the first line,
+so the "utf-8" line must be the second line
+).
 """
 # ---- TOF
 
