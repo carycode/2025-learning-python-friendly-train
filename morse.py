@@ -19,6 +19,10 @@ FUTURE:
     https://en.wikipedia.org/wiki/Prosigns_for_Morse_code
     such as
     73 	Best regards
+    
+FUTURE:
+    consider making sounds
+    consider listening to sounds
 """
 # ---- TOF
 
@@ -28,7 +32,7 @@ FUTURE:
 
 # ---- code
 
-def build_morse_dictionary(){
+def build_morse_dictionary():
         
     # p. 2 of
     # https://www.itu.int/dms_pubrec/itu-r/rec/m/R-REC-M.1677-1-200910-I!!PDF-E.pdf
@@ -36,17 +40,85 @@ def build_morse_dictionary(){
         'a': '.-',
         'b': '-...',
         'c': '-.-.',
+        'd': '-..',
+        'e': '.',
+        'accented e': '..-..',
+        'f': '..-.',
+        'g': '--.',
+        'h': '....',
         
-        
+        'i': '..',
+        'j': '.---',
+        'k': '-.-',
+        'l': '.-..',
+        'm': '--',
+        'n': '-.',
+        'o': '---',
+        'p': '.--.',
+        'q': '--.-',
+        'r': '.-.',
+        's': '...',
+        't': '-',
+        'u': '..-',
+        'v': '...-',
+        'w': '.--',
+        'x': '.--',
+        'y': '-.--',
+        'z': '--..',
         }
-    morse_digits = {
-        }
+    morse_digits = {}
+    for digit in range(1,5):
+        dots = digit
+        dashes = 5-dots
+        morse_digits[str(dots)] = (
+            '.'*dots + '-'*dashes
+            )
+    for digit in range(5,10+1):
+        dashes = digit - 5
+        dots = 5-dashes
+        morse_digits[str(digit)] = (
+            '-'*dashes + '.'*dots
+            )
+    morse_digits['0'] = '-'*5
     # p. 3 of
     # https://www.itu.int/dms_pubrec/itu-r/rec/m/R-REC-M.1677-1-200910-I!!PDF-E.pdf
     morse_punctuation = {
+        '.': '.-.-.-', # period
+        '?': '..--..',
+        '@': '.--.-.'
+        }
+    
+    # misc other stuff not exactly called out
+    morse_other = {
+        ' ': '  '
         }
 
-}
+    translation_table = {}
+    translation_table.update(morse_letters)
+    translation_table.update(morse_digits)
+    translation_table.update(morse_punctuation)
+    translation_table.update(morse_other)
+    
+    return translation_table
+
+
+def main():
+        table = build_morse_dictionary()
+        print( table )
+        text = "Testing Morse with David and Russ"
+        output = []
+        for character in text:
+            temp = table[character.lower()]
+            print( temp )
+            # output += table[ temp ] 
+            output +=   temp
+        print( f"\n\n{output = }" )
+        out_string = "".join( output )
+        
+        print( f"\n\n{out_string = }" )
+        print( 'done')
+
+main()
 
 
 # ---- EOF
