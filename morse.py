@@ -25,19 +25,25 @@ FUTURE:
     consider making sounds
     consider listening to sounds
 
+FUTURE: collect these functions into a cohesive "class Morse" ?
 
 
-As recommended by
+The recommendation of
 https://peps.python.org/pep-0263/
-the first or second line is
+*seems* to say first or second line is
     # -*- coding: utf-8 -*-
 As recommended by
 https://stackoverflow.com/questions/6908143/should-i-put-shebang-in-python-scripts-and-what-form-should-it-take
 the first line is the recommended shebang line
     #!/usr/bin/env python3
 (this *must* be the first line,
-so the "utf-8" line must be the second line
+so the "utf-8" line, if any, must be the second line
 ).
+However,
+https://peps.python.org/pep-0008/
+suggests
+"Code ... should always use UTF-8, and should not have an encoding declaration."
+
 """
 # ---- TOF
 
@@ -88,7 +94,7 @@ def build_morse_dictionary():
         morse_digits[str(dots)] = (
             '.'*dots + '-'*dashes
             )
-    for digit in range(5,10+1):
+    for digit in range(5,10):
         dashes = digit - 5
         dots = 5-dashes
         morse_digits[str(digit)] = (
@@ -105,7 +111,7 @@ def build_morse_dictionary():
     
     # misc other stuff not exactly called out
     morse_other = {
-        ' ': '  '
+        ' ': '  ' # two spaces here, so we end up with a net 3 spaces between words
         }
 
     translation_table = {}
@@ -114,19 +120,22 @@ def build_morse_dictionary():
     translation_table.update(morse_punctuation)
     translation_table.update(morse_other)
     
-    return translation_table
+    reverse_translation_table = {}
+    # FIXME
+    
+    return translation_table, reverse_translation_table
 
 
 def main():
-        table = build_morse_dictionary()
+        table, reverse_table = build_morse_dictionary()
         print( table )
         text = "Testing Morse with David and Russ"
         output = []
         for character in text:
-            temp = table[character.lower()]
-            print( temp )
-            # output += table[ temp ] 
-            output +=   temp
+            temp = table[character.lower()] + ' ' # single space between letters
+            print( f"\n({ temp = })")
+            # output += temp # splits up strings into letters ...
+            output.append(temp) # appends the string as a single item
         print( f"\n\n{output = }" )
         out_string = "".join( output )
         
