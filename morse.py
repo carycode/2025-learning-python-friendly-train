@@ -103,7 +103,7 @@ def build_morse_dictionary():
         'u': '..-',
         'v': '...-',
         'w': '.--',
-        'x': '.--',
+        'x': '-..-',
         'y': '-.--',
         'z': '--..',
         }
@@ -125,7 +125,19 @@ def build_morse_dictionary():
     # https://www.itu.int/dms_pubrec/itu-r/rec/m/R-REC-M.1677-1-200910-I!!PDF-E.pdf
     morse_punctuation = {
         '.': '.-.-.-', # period
+        ',': '--..--',
+        ':': '---...', # colon (or division sign?)
         '?': '..--..',
+        '\'': '.----.', # apostrophe
+        '-': '-....-', # hyphen or dash or subtraction sign
+        '/': '-..-.', # fraction bar or division sign
+        '(': '-.--.', # left-hand bracket
+        ')': '-.--.-', # right-hand bracket
+        '"': '.-..-.', # quotation mark (before and after)
+        '=': '-...-', # "double hyphen"
+        #...
+        '+': '.-.-.', # cross or addition sign
+        #...
         '@': '.--.-.'
         }
     
@@ -154,9 +166,8 @@ def build_morse_dictionary():
         reverse_value = reverse_translation_table[value]
         if key != reverse_value:
             print( f"whoops: Morse {value} mapped to both {key} and {reverse_value} ")
-        
     # check for duplicates
-    #assert len(reverse_translation_table) == len(translation_table)
+    assert len(reverse_translation_table) == len(translation_table)
     
     return translation_table, reverse_translation_table
 
