@@ -74,7 +74,9 @@ Related:
 # ---- code
 
 def build_morse_dictionary():
-    
+    """
+    Build morse-to-text and text-to-morse dictionaries.
+    """
     # p. 2 of
     # https://www.itu.int/dms_pubrec/itu-r/rec/m/R-REC-M.1677-1-200910-I!!PDF-E.pdf
     morse_letters = {
@@ -171,12 +173,35 @@ def build_morse_dictionary():
 
     return translation_table, reverse_translation_table
 
+def decode_from_morse( dotty, morse_to_text ):
+        """
+        decode dots-and-dashes
+        into text
+        using the standard International Morse code.
+        """
+        output = []
+        list_of_morse_characters = dotty.split(" ")
+        for morse_character in list_of_morse_characters:
+            assert (" " != morse_character)
+            if( "" == morse_character ):
+                # long gap --> space
+                output += " "
+            else:
+                temp = morse_to_text[morse_character]
+                output += temp
+                print( f"({temp = })")
+        # FIXME: support "/" as word separator
+
+        print( f"\n\n{output = }" )
+        out_string = "".join( output )
+        return out_string
 
 
-def main():
-        text_to_morse, morse_to_text = build_morse_dictionary()
-        print( text_to_morse )
-        text = "Testing Morse with David and Russ"
+def encode_to_morse(text, text_to_morse):
+        """
+        encode normal text into dots and dashes
+        using the standard International Morse code.
+        """
         output = []
         for character in text:
             temp = text_to_morse[character.lower()] + ' ' # single space between letters
@@ -185,11 +210,26 @@ def main():
             output.append(temp) # appends the string as a single item
         print( f"\n\n{output = }" )
         out_string = "".join( output )
-        
+        return out_string
+
+
+def main():
+        text_to_morse, morse_to_text = build_morse_dictionary()
+        print( text_to_morse )
+        print( morse_to_text )
+        text = "Testing Morse with David and Russ"
+        out_string = encode_to_morse(text, text_to_morse)
         print( f"\n\n{out_string = }" )
         print( 'done')
+        dotty = "- . ... - .. -. --.    -- --- .-. ... .    .-- .. - ...."
+        decoded_text = decode_from_morse( dotty, morse_to_text )
+        print( f"\n{decoded_text = }" )
+
+        # FIXME: round-trip encode-decode cycle.
+
 
 main()
+
 
 
 # ---- EOF
