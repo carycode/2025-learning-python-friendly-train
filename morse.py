@@ -125,6 +125,7 @@ def build_morse_dictionary():
     morse_digits['0'] = '-'*5
     # p. 3 of
     # https://www.itu.int/dms_pubrec/itu-r/rec/m/R-REC-M.1677-1-200910-I!!PDF-E.pdf
+    # https://www.omniglot.com/writing/morsecode.htm
     morse_punctuation = {
         '.': '.-.-.-', # period
         ',': '--..--',
@@ -173,13 +174,17 @@ def build_morse_dictionary():
 
     return translation_table, reverse_translation_table
 
-def decode_from_morse( dotty, morse_to_text ):
+def decode_from_morse( dotty_original, morse_to_text ):
         """
         decode dots-and-dashes
         into text
         using the standard International Morse code.
         """
         output = []
+        # handle "·" ( &middot; ) ( Unicode : U+00B7 ) (Latin1 / Windows-1252 : 0xb7 )
+        # so both '.-'and "·-" are recocognized as the letter 'a'.
+        mid_dot = "\N{MIDDLE DOT}"
+        dotty = dotty_original.replace( mid_dot, '.' )
         list_of_morse_characters = dotty.split(" ")
         for morse_character in list_of_morse_characters:
             assert (" " != morse_character)
@@ -187,7 +192,11 @@ def decode_from_morse( dotty, morse_to_text ):
                 # long gap --> space
                 output += " "
             else:
-                temp = morse_to_text[morse_character]
+                try:
+                    temp = morse_to_text[morse_character]
+                except KeyError:
+                    print( f"unknown {morse_character = }" )
+                    temp = " ### "
                 output += temp
                 print( f"({temp = })")
         # FIXME: support "/" as word separator
@@ -224,6 +233,10 @@ def main():
         dotty = "- . ... - .. -. --.    -- --- .-. ... .    .-- .. - ...."
         decoded_text = decode_from_morse( dotty, morse_to_text )
         print( f"\n{decoded_text = }" )
+        dotty = ".. - .. ... .- .-- .- -.-- --- ..-. - .-. .- -. ... -- .. - - .. -. --. - . -..- - .. -. ..-. --- .-. -- .- - .. --- -. .- ... .- ... . .-. .. . ... --- ..-. --- -. -····- --- ..-. ..-. - --- -. . ... --··-- .-.. .. --. .... - ... --··-- --- .-. -.-. .-.. .. -.-. -.- ... - .... .- - -.-. .- -. -... . -.. .. .-. . -.-. - .-.. -.-- ..- -. -.. . .-. ... - --- --- -.. -... -.-- .- ... -.- .. .-.. .-.. . -.. .-.. .. ... - . -. . .-. --- .-. --- -... ... . .-. ...- . .-. .-- .. - .... --- ..- - ... .--. . -.-. .. .- .-.. . --.- ..- .. .--. -- . -. - ·-·-·-"
+        decoded_text = decode_from_morse( dotty, morse_to_text )
+        print( f"\n{decoded_text = }" )
+
 
         # FIXME: round-trip encode-decode cycle.
 
